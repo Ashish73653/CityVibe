@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum TargetType {
+  POST
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  passwordHash    String
+  role            UserRole  @default(USER)
+  selectedCityId  Int?
+  createdAt       DateTime  @default(now())
+
+  selectedCity    City?     @relation(fields: [selectedCityId], references: [id])
+  posts           RecommendationPost[]
+  likes           Like[]
+  comments        Comment[]
+  savedPlaces     SavedPlace[]
+  reports         Report[]
+
+  @@index([email])
+}
+
+model City {
+  id          Int       @id @default(autoincrement())
+  name        String
+  state       String?
+  createdAt   DateTime  @default(now())
+
+  users       User[]
+  places      Place[]
+  posts       RecommendationPost[]
+
+  @@index([name])
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+
+  places      Place[]
+  posts       RecommendationPost[]
+
+  @@index([slug])
+}
+
+model Place {
+  id          Int       @id @default(autoincrement())
+  name        String
+  cityId      Int
+  categoryId  Int
+  address     String?
+  locality    String?
+  description String?
+  createdAt   DateTime  @default(now())
+
+  city        City      @relation(fields: [cityId], references: [id])
+  category    Category  @relation(fields: [categoryId], references: [id])
+  posts       RecommendationPost[]
+  savedBy     SavedPlace[]
+
+  @@index([cityId])
+  @@index([categoryId])
+}
+
+model RecommendationPost {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  cityId          Int
+  placeId         Int
+  categoryId      Int
+  caption         String
+  mediaUrl        String
+  mediaType       MediaType
+  tags            String?
+  budgetEstimate  Int?
+  isHidden        Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id])
+  city            City      @relation(fields: [cityId], references: [id])
+  place           Place     @relation(fields: [placeId], references: [id])
+  category        Category  @relation(fields: [categoryId], references: [id])
+  likes           Like[]
+  comments        Comment[]
+  reports         Report[]
+
+  @@index([cityId, createdAt])
+  @@index([placeId])
+  @@index([categoryId])
+  @@index([userId])
+}
+
+model Like {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  createdAt DateTime  @default(now())
+
+  post      RecommendationPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  content   String
+  createdAt DateTime  @default(now())
+
+  post      RecommendationPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([postId])
+  @@index([userId])
+}
+
+model SavedPlace {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  placeId   Int
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  place     Place     @relation(fields: [placeId], references: [id])
+
+  @@unique([userId, placeId])
+  @@index([userId])
+  @@index([placeId])
+}
+
+model Report {
+  id          Int       @id @default(autoincrement())
+  reporterId  Int
+  targetType  TargetType
+  targetId    Int
+  reason      String
+  createdAt   DateTime  @default(now())
+
+  reporter    User      @relation(fields: [reporterId], references: [id])
+  post        RecommendationPost? @relation(fields: [targetId], references: [id])
+
+  @@index([targetType, targetId])
+  @@index([reporterId])
+}
