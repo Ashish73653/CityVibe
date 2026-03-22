@@ -33,51 +33,58 @@ export default function SignupPage() {
       }
 
       router.push('/select-city');
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link href="/auth/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Login
-            </Link>
+    <main className="cv-shell flex min-h-[calc(100vh-2rem)] items-center py-6 md:py-10">
+      <div className="cv-card grid w-full overflow-hidden md:grid-cols-[1fr_1fr]">
+        <section className="hidden bg-gradient-to-br from-[#d5a33b] to-[#be8821] p-9 text-[#2a2118] md:block">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5a3f15]">Join CityVibe</p>
+          <h1 className="mt-3 text-4xl font-black leading-tight">Local plans, real places, better weekends.</h1>
+          <p className="mt-4 max-w-sm text-sm text-[#4d3b1f]">
+            Build your city profile, discover underrated spots, and share recommendations that actually help people nearby.
           </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <p className="text-sm text-red-800">{error}</p>
-            </div>
-          )}
-          <div className="rounded-md shadow-sm -space-y-px">
+        </section>
+
+        <section className="p-6 md:p-9">
+          <div className="mb-7">
+            <h2 className="text-3xl font-black tracking-tight text-[#1f1d1a]">Create account</h2>
+            <p className="mt-2 text-sm cv-muted">
+              Already registered?{' '}
+              <Link href="/auth/login" className="font-bold text-[#a8770f] hover:text-[#8f650c]">
+                Sign in here
+              </Link>
+            </p>
+          </div>
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {error && (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+            )}
+
             <div>
-              <label htmlFor="name" className="sr-only">
-                Full Name
+              <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-[#302a23]">
+                Full name
               </label>
               <input
                 id="name"
                 name="name"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Full Name"
+                className="cv-field"
+                placeholder="Your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
             <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
+              <label htmlFor="email-address" className="mb-1.5 block text-sm font-semibold text-[#302a23]">
+                Email
               </label>
               <input
                 id="email-address"
@@ -85,14 +92,15 @@ export default function SignupPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                className="cv-field"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="mb-1.5 block text-sm font-semibold text-[#302a23]">
                 Password
               </label>
               <input
@@ -101,25 +109,19 @@ export default function SignupPage() {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password (min 6 characters)"
+                className="cv-field"
+                placeholder="Minimum 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-          </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Creating account...' : 'Sign up'}
+            <button type="submit" disabled={loading} className="cv-button-primary mt-2 w-full disabled:cursor-not-allowed disabled:opacity-60">
+              {loading ? 'Creating account...' : 'Create account'}
             </button>
-          </div>
-        </form>
+          </form>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

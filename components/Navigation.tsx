@@ -13,6 +13,24 @@ interface User {
   selectedCity: { id: number; name: string } | null;
 }
 
+const publicLinks = [
+  { label: 'Explore', href: '#explore' },
+  { label: 'Categories', href: '#categories' },
+  { label: 'Events', href: '#featured' },
+  { label: 'Cities', href: '#cities' },
+  { label: 'Creators', href: '#creators' },
+  { label: 'About', href: '#about' },
+];
+
+const appLinks = [
+  { label: 'Explore', href: '/home' },
+  { label: 'Categories', href: '/categories' },
+  { label: 'Events', href: '/events' },
+  { label: 'Cities', href: '/select-city' },
+  { label: 'Creators', href: '/creators' },
+  { label: 'About', href: '/' },
+];
+
 export default function Navigation() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,104 +63,107 @@ export default function Navigation() {
     }
   }
 
-  if (loading) {
-    return (
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <span className="text-xl font-bold text-indigo-600">CityVibe</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-    );
-  }
+  const links = user ? appLinks : publicLinks;
 
   return (
-    <nav className="bg-white shadow">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="text-xl font-bold text-indigo-600">
-              CityVibe
-            </Link>
-            {user && (
-              <>
-                <Link
-                  href="/home"
-                  className={`text-gray-700 hover:text-indigo-600 ${
-                    pathname === '/home' ? 'text-indigo-600 font-medium' : ''
-                  }`}
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/upload"
-                  className={`text-gray-700 hover:text-indigo-600 ${
-                    pathname === '/upload' ? 'text-indigo-600 font-medium' : ''
-                  }`}
-                >
-                  Upload
-                </Link>
-                <Link
-                  href="/saved"
-                  className={`text-gray-700 hover:text-indigo-600 ${
-                    pathname === '/saved' ? 'text-indigo-600 font-medium' : ''
-                  }`}
-                >
-                  Saved
-                </Link>
-                {user.role === 'ADMIN' && (
+    <nav className="sticky top-0 z-30 border-b border-neutral-900/10 bg-[#f7f3ea]/85 backdrop-blur-md">
+      <div className="cv-shell py-3">
+        <div className="flex items-center justify-between gap-2 rounded-2xl border border-neutral-900/10 bg-white/90 px-3 py-2.5 shadow-lg shadow-black/5 sm:gap-3 sm:px-4 sm:py-3">
+          <Link href="/" className="inline-flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 sm:gap-2.5">
+            <img
+              src="/CityVibe.png"
+              alt="CityVibe logo"
+              className="h-10 w-10 flex-shrink-0 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.18)] sm:h-12 sm:w-12"
+            />
+            <span className="min-w-0 leading-tight">
+              <span className="block truncate text-base font-black tracking-tight text-[#1f1d1a] sm:text-lg">CityVibe</span>
+              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8a7a63] md:block">
+                Discover beyond obvious
+              </span>
+            </span>
+          </Link>
+
+          {!loading && (
+            <div className="hidden flex-wrap items-center gap-1 lg:flex">
+              {links.map((link) => {
+                const isActive = pathname === link.href;
+                return (
                   <Link
-                    href="/admin"
-                    className={`text-gray-700 hover:text-indigo-600 ${
-                      pathname === '/admin' ? 'text-indigo-600 font-medium' : ''
+                    key={link.label}
+                    href={link.href}
+                    className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                      isActive
+                        ? 'bg-[#1f1d1a] text-[#f8f5ef] shadow-md shadow-black/20'
+                        : 'text-[#4d453b] hover:bg-[#f0e6d6] active:bg-[#e5dbcc]'
                     }`}
                   >
-                    Admin
+                    {link.label}
                   </Link>
-                )}
-              </>
-            )}
-          </div>
-          <div className="flex items-center space-x-4">
-            {user ? (
+                );
+              })}
+            </div>
+          )}
+
+          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+            <label className="hidden items-center gap-2 rounded-full border border-neutral-900/12 bg-white px-3 py-1.5 text-sm text-neutral-500 transition-all duration-200 hover:border-neutral-900/20 hover:shadow-md md:inline-flex">
+              <span>Search</span>
+              <input
+                aria-label="Search places"
+                className="w-40 bg-transparent text-sm text-neutral-700 outline-none placeholder-neutral-400"
+                placeholder="City, cafe, event"
+              />
+            </label>
+
+            {!loading && user ? (
               <>
                 {user.selectedCity && (
                   <Link
                     href="/select-city"
-                    className="text-sm text-gray-600 hover:text-indigo-600"
+                    className="hidden rounded-full border border-neutral-900/12 bg-[#f4ecdc] px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-[#ede2cf] transition-colors duration-200 sm:inline-flex"
                   >
                     {user.selectedCity.name}
                   </Link>
                 )}
-                <span className="text-sm text-gray-700">{user.name}</span>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-gray-600 hover:text-indigo-600"
+                  className="rounded-full border border-neutral-900/14 px-2.5 py-1.5 text-xs font-semibold text-neutral-700 transition-colors duration-200 hover:bg-neutral-100 sm:px-3.5 sm:text-sm"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link
-                  href="/auth/login"
-                  className="text-gray-700 hover:text-indigo-600"
-                >
+                <Link href="/auth/login" className="hidden rounded-full px-3 py-1.5 text-sm font-semibold text-neutral-700 transition-colors duration-200 hover:bg-neutral-100 sm:inline-flex">
                   Login
                 </Link>
-                <Link
-                  href="/auth/signup"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-                >
-                  Sign Up
+                <Link href="/auth/signup" className="cv-button-primary rounded-full px-3 py-1.5 text-xs transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm">
+                  Start Exploring
                 </Link>
               </>
             )}
           </div>
         </div>
+
+        {!loading && (
+          <div className="mt-2 flex gap-1 overflow-x-auto pb-1 lg:hidden">
+            {links.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={`mobile-${link.label}`}
+                  href={link.href}
+                  className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                    isActive
+                      ? 'bg-[#1f1d1a] text-[#f8f5ef] shadow-md shadow-black/20'
+                      : 'border border-neutral-900/10 bg-white text-[#4d453b] hover:bg-[#f0e6d6]'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </nav>
   );

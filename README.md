@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CityVibe
 
-## Getting Started
+CityVibe is a hyperlocal city discovery platform for recommendations, places, and community posts.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 18+
+- npm
+
+## Local Setup
+
+1. Install dependencies.
+
+```bash
+npm install
+```
+
+2. Create environment file.
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+macOS/Linux:
+
+```bash
+cp .env.example .env
+```
+
+3. Generate Prisma client.
+
+```bash
+npm run prisma:generate
+```
+
+4. Run migrations.
+
+```bash
+npm run prisma:migrate
+```
+
+5. Seed sample data (first-time setup only).
+
+```bash
+npm run prisma:seed
+```
+
+If you already seeded before and want a clean database, run:
+
+```bash
+npx prisma migrate reset --force
+```
+
+6. Start the app.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+7. Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Why Prisma Generate Is Required
 
-## Learn More
+If Prisma client is not generated, the app fails with:
 
-To learn more about Next.js, take a look at the following resources:
+`@prisma/client did not initialize yet. Please run "prisma generate"`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project now runs `prisma generate` automatically on `npm install` via `postinstall`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Useful Commands
 
-## Deploy on Vercel
+```bash
+npm run dev            # Start development server
+npm run build          # Production build
+npm run start          # Start production server
+npm run lint           # Lint code
+npm run prisma:generate
+npm run prisma:migrate
+npm run prisma:seed
+npm run prisma:studio
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Test Accounts (after seed)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Admin: `admin@cityvibe.com` / `admin123`
+- User: `rahul@example.com` / `user123`
+- User: `priya@example.com` / `user123`
+- User: `amit@example.com` / `user123`

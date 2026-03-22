@@ -1,26 +1,205 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f3ea;
+  --surface: #ffffff;
+  --foreground: #1d1b18;
+  --muted: #6c645a;
+  --brand: #c89420;
+  --brand-strong: #a8770f;
+  --accent-terracotta: #c7683b;
+  --accent-olive: #76855a;
+  --accent-steel: #6f7f8d;
+  --ring: rgba(200, 148, 32, 0.28);
+  --card-shadow: 0 20px 55px -34px rgba(29, 27, 24, 0.48);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-accent-terracotta: var(--accent-terracotta);
+  --color-accent-olive: var(--accent-olive);
+  --color-accent-steel: var(--accent-steel);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), "Manrope", "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  position: relative;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--background);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% -12%, rgba(200, 148, 32, 0.17), transparent 40%),
+    radial-gradient(circle at 92% -20%, rgba(111, 127, 141, 0.15), transparent 37%),
+    var(--background);
+}
+
+a {
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.cv-shell {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.cv-card {
+  border: 1px solid rgba(29, 27, 24, 0.1);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--surface) 94%, #ffffff 6%);
+  box-shadow: var(--card-shadow);
+}
+
+.cv-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 27, 24, 0.14);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 90%, #ffffff 10%);
+}
+
+.cv-button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.8rem;
+  background: linear-gradient(130deg, var(--brand), var(--brand-strong));
+  color: #1d1b18;
+  padding: 0.68rem 1rem;
+  font-weight: 700;
+  box-shadow: 0 12px 26px -18px rgba(168, 119, 15, 0.78);
+}
+
+.cv-button-primary:hover {
+  filter: brightness(1.03);
+}
+
+.cv-button-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(29, 27, 24, 0.16);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--foreground);
+  padding: 0.68rem 1rem;
+  font-weight: 700;
+}
+
+.cv-field {
+  width: 100%;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(29, 27, 24, 0.16);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.78rem 0.9rem;
+  color: var(--foreground);
+}
+
+.cv-field:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--brand) 40%, white 60%);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.cv-nav-link {
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.87rem;
+  font-weight: 650;
+  color: #39342d;
+  transition: all 200ms ease;
+}
+
+.cv-nav-link:hover {
+  background: rgba(200, 148, 32, 0.14);
+}
+
+.cv-nav-link-active {
+  background: #1f1e1a;
+  color: #f8f5ef;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cv-section-title {
+  font-size: clamp(1.6rem, 2.1vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.cv-muted {
+  color: #6a6258;
+}
+
+.cv-enter {
+  animation: cv-enter 540ms ease both;
+}
+
+@keyframes cv-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes animate-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes animate-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: animate-fade-in 800ms ease-out both;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
 }
